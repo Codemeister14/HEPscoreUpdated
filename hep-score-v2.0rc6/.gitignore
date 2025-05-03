@@ -1,0 +1,35 @@
+*.py[cod]
+
+# Packages
+*.egg*
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+
+# PBR auto-generated files
+RELEASENOTES*
+
+# Unit test / coverage reports
+.coverage*
+coverage.xml
+.tox
+.venv
+.python-version
+report.xml
+
+# Editors
+*~
+.*.swp
+.*sw?
+.vscode
+
+# Desktop Service Store
+*.DS_Store
+
+

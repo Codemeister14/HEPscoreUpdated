@@ -1,0 +1,91 @@
+v2.0
+----
+-Documentation updates
+-Display additional container engine output logs on failure, with decoding
+-Don't pass apptainer the '--unsquash' option if running as root
+-Utilize tmp subdirectory in OUTDIR for /tmp and /var/tmp bindmounts
+-Only log failure to remove unpack directory when debugging is enabled
+-Add support for lists of registry types, with one to utilize selectable via 
+  the '-i' option (BMK-1188)
+-Change configuration key from 'hepscore_benchmark' to 'hepscore' (BMK-1175),
+  but allow the 'hepscore_benchmark' key for compatibility (BMK-1219)
+-Don't set OUTDIR scache directory as singularity cache when clean option is 
+  false (BMK-1198) 
+-Configurable number of cores to be loaded (ncores) to be passed to the
+  workloads, if the workloads implement this feature
+-Add ncores value in the yaml and the json report. 
+  ncores is consequently part of the hash (breaks backward compatibility)
+-Add a config file with the WL versions supporting ncores
+-Unset problematic Singularity/Apptainer environment variables (BMK-1273)
+-Allow registry to be overriden via the command line (-R, --registry) and options field  (BMK-1290)
+
+v1.5
+----
+-Change output version key to include specific container engine
+-Call Apptainer with '--unsquash' when running unprivileged (BMK-1032)
+-Add support for multi-arch Singularity images (BMK-1092)
+-Display location of included conf directory in help output (BMK-1098)
+-Add ARM benchmark configuration
+-Add '-n' CLI parameter to allow users to request the use of a named
+built-in configuration, and the '-l' option to list built-in configs
+-Create an 'unpack' dir in OUTDIR for Singularity/Apptainer
+-Remove old configs
+-Add section on score calculation (BMK-1138)
+-Add note about "sessiondir max size" setting (BMK-953)
+-Finalize HEPscore23 run3 multi-arch workload set
+
+v1.4
+----
+-Rename default benchmark to HEPscoreBeta (BMK-804)
+-Disable score_per_core reporting (BMK-677)
+-Document Podman usage (BMK-808)
+-No longer contain PID namespace (MR134)
+-Ignore unicode decode errors, for example from special characters
+-Add support for oras:// and https:// registry URIs
+-Use absolute path for Singularity cache (MR140)
+
+v1.3
+----
+-Add support for oras:// and https:// registry URIs.
+-Use absolute path for Singularity cache (MR140).
+
+v1.2
+----
+-Rename default benchmark from HEPscore2X to HEPscore20POC (BMK-750)
+
+v1.1
+----
+-Update developer contact information to Discourse and Gitlab (BMK-722)
+-Use absolute path for OUTDIR for Singularity runs as well (BMK-725)
+-Include overall 'start_at' and 'end_at' fields in the output JSON/YAML
+
+v1.0
+----
+-Modularized the overall design of the software
+-HEPscore2X new default benchmark
+-Added Belle2 gen-sim-reco benchmark to HEPscore2X
+-Support for custom container arguments in the YAML config
+-Implements support for weighted geometric mean (BMK-427) via per-benchmark
+'weight' field (defaults to 1.0)
+-Support for forced user namespace Singularity execution with '-S' -
+useful in nested Singularity environments
+-Singularity now the default container execution platform
+-Added 'continue_fail' parameter to the configuration (BMK-442)
+-Implements multiple URIs for the registry setting in the YAML config
+(docker://, dir://, shub://).
+-Update configuration and support latest available versions of benchmark
+containers which set the execution USER for Docker
+-Enable multiline json output handling to support new containers
+-Add support for new workload cleanup functionality (BMK-566)
+-Move app_info configuration to settings in the YAML config (BMK-559)
+-Support new workload JSON structure (BMK-558)
+-Implement Singularity image cleaning (BMK-561)
+-Add "retries" parameter - set to 1 in default configuration (BMK-533)
+-Moved to argparse for argument parsing
+-Dropped Python2 support and need for oyaml module
+-PEP8 code quality improvements
+-Support for benchmarks which use GPUs ('gpu' config option)
+-Improvements to module logging configurability
+-Added per-benchmark 'results_file' config option (BMK-284)
+-Automatically build/publish wheels for tags
+

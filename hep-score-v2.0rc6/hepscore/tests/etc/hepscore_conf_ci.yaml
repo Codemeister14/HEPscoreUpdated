@@ -1,0 +1,19 @@
+hepscore:
+  settings:
+    name: HEPscoreCI
+    reference_machine: 'Unknown'
+    registry: docker://gitlab-registry.cern.ch/hep-benchmarks/hep-workloads
+    scaling: 10
+    repetitions: 2  #number of repetitions of the same benchmark
+    method: geometric_mean #or any other algorithm
+  benchmarks:
+    belle2-gen-sim-reco-ma-bmk:
+      results_file: belle2-gen-sim-reco-ma_summary.json
+      ref_scores:
+        gen-sim-reco: 15.4
+      weight: 1.0
+      version: v2.0
+      args:
+        threads: 1
+        events: 5
+        debug: true

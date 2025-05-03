@@ -1,0 +1,13 @@
+[MESSAGE CONTROL]
+# pylint config
+ignore-patterns=test_*
+# detect & use all cores
+jobs=0
+# Using default set, with new tests disabled to match previous rules from flake8
+        # Warnings skipped
+disable=no-member,
+        too-many-branches,
+        too-many-statements,
+        too-many-locals,
+        too-many-instance-attributes,
+        consider-using-with

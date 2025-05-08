@@ -107,7 +107,8 @@ def parse_args(args):
                         version="%(prog)s " + hepscore.__version__)
     parser.add_argument("-v", "--verbose", action='store_true',
                         help="enables verbose mode. Display debug messages.")
-
+    parser.add_argument("-O", "--oid", action="append")
+    parser.add_argument("-I", "--IPs", action="append")
     arg_dict = vars(parser.parse_args(args))
     return arg_dict
 
@@ -232,7 +233,7 @@ def main():
                          resultsdir)
             sys.exit(exit_status_dict['Error failed outdir creation'])
 
-    hep_score = hepscore.HEPscore(active_config, resultsdir)
+    hep_score = hepscore.HEPscore(active_config, resultsdir, args["oid"], args["IPs"])
 
     if hep_score.run(args['replay']) >= 0:
         hep_score.gen_score()

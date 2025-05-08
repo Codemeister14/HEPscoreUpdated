@@ -181,8 +181,10 @@ class HEPscore():
     results = []
     weights = []
     score = -1
+    oid = []
+    IP = []
 
-    def __init__(self, config, resultsdir):
+    def __init__(self, config, resultsdir, oids, IPs):
         """HEPSCORE: a HEP benchmark SCORE generator
 
         This class orchestrates HEP benchmarks (as docker or singularity images).
@@ -207,7 +209,8 @@ class HEPscore():
         if 'hepscore' not in config:
             logger.error("Required 'hepscore' key not in configuration!")
             sys.exit(1)
-
+        self.oid = oids
+        self.IP = IPs
         self.confobj = config['hepscore']
         self.settings = self.confobj['settings']
         self.tmpdir = self.resultsdir + '/tmp'
@@ -1014,17 +1017,14 @@ class HEPscore():
         sysname = ' '.join(sysinfo)
         starttime = time.time()
         curtime = time.asctime(time.localtime(starttime))
-        IPs = ["172.20.176.21","172.20.176.22"]
-        oids = [".1.3.6.1.4.1.13742.6.5.4.3.1.4.1.21.5",".1.3.6.1.4.1.13742.6.5.4.3.1.4.1.21.5"]
         power = []
         stop = threading.Event()
-
         def thread_target(delay, IPs, stop, power, oids):
             asyncio.run(getPowerReadings(delay, IPs, stop, power, oids))
 
         snmpThread = threading.Thread(
             target=thread_target,
-            args=(5, IPs, stop, power, oids)
+            args=(5, self.IP, stop, power, self.oid)
         )
         snmpThread.start()
     

@@ -41,7 +41,7 @@ async def getPowerReadings(interval,IPs,stop,power,oid):
                     CommunityData('LHCsnmpL88k', mpModel=1),
                     transport,
                     ContextData(),
-                    ObjectType(ObjectIdentity(oid[i])))
+                    ObjectType(ObjectIdentity(oid[i]+".5")))
             if errorIndication:
                 print(f"SNMP error: {errorIndication}")
             elif errorStatus:
@@ -203,13 +203,13 @@ class HEPscore():
 
         if 'hepscore_benchmark' in config:
             logger.warning("Deprecated 'hepscore_benchmark' key found in configuration."
-                           "  Please update to 'hepscore'.");
+                           "  Please update to 'hepscore'.")
             config['hepscore'] = config['hepscore_benchmark']
             del config['hepscore_benchmark']
         if 'hepscore' not in config:
             logger.error("Required 'hepscore' key not in configuration!")
             sys.exit(1)
-        self.oid = oids
+        self.oid = ".1.3.6.1.4.1.13742.6.5.4.3.1.4.1."+str(oids)
         self.IP = IPs
         self.confobj = config['hepscore']
         self.settings = self.confobj['settings']
@@ -594,7 +594,7 @@ class HEPscore():
             logger.error("Could not locate %s on the system. Please check your path!", self.cec)
         return ['unknown', '0.0']
 
-    def _run_benchmark(self, benchmark, mock):
+    def _run_benchmark(self, benchmark, mock, times):
         """Run a benchark from the configuration"""
         bench_conf = self.confobj['benchmarks'][benchmark]
         # Arguments of each workload that are ignored
@@ -719,7 +719,9 @@ class HEPscore():
 
             bench_conf[runstr] = {}
             starttime = time.time()
+            times[benchmark+runstr+"start"] = starttime
             bench_conf[runstr]['start_at'] = time.ctime(starttime)
+            
 
             if not mock:
                 try:
@@ -782,7 +784,7 @@ class HEPscore():
             endtime = time.time()
             bench_conf[runstr]['end_at'] = time.ctime(endtime)
             bench_conf[runstr]['duration'] = math.floor(endtime) - math.floor(starttime)
-
+            times[benchmark+runstr+"end"] = endtime
             if not mock and cmdf.returncode != 0:
                 logger.error("running %s failed.  Exit status %s", benchmark, cmdf.returncode)
 
@@ -1018,6 +1020,7 @@ class HEPscore():
         starttime = time.time()
         curtime = time.asctime(time.localtime(starttime))
         power = []
+        benchTime = {}
         stop = threading.Event()
         def thread_target(delay, IPs, stop, power, oids):
             asyncio.run(getPowerReadings(delay, IPs, stop, power, oids))
@@ -1083,7 +1086,7 @@ class HEPscore():
         res = 0
         have_failure = False
         for benchmark in self.confobj['benchmarks']:
-            res = self._run_benchmark(benchmark, mock)
+            res = self._run_benchmark(benchmark, mock, benchTime)
             if res < 0:
                 have_failure = True
                 # set error to first benchmark encountered
@@ -1103,6 +1106,7 @@ class HEPscore():
         snmpThread.join()
         with open("power.json", "w") as f:
             json.dump(power, f)
+            json.dump(benchTime, f)
         endtime= time.time()
         self.confobj['environment']['end_at'] = time.asctime(time.localtime(endtime))
         self.confobj['environment']['duration'] = math.floor(endtime) - math.floor(starttime)

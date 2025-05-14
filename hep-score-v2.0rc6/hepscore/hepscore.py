@@ -209,12 +209,13 @@ class HEPscore():
         if 'hepscore' not in config:
             logger.error("Required 'hepscore' key not in configuration!")
             sys.exit(1)
-        self.oid = ".1.3.6.1.4.1.13742.6.5.4.3.1.4.1."+str(oids)
+        for od in oids:
+            self.oid.append(".1.3.6.1.4.1.13742.6.5.4.3.1.4.1."+str(oids))
         self.IP = IPs
         self.confobj = config['hepscore']
         self.settings = self.confobj['settings']
         self.tmpdir = self.resultsdir + '/tmp'
-
+        print(self.oid)
         if 'options' in self.confobj:
             self.options = self.confobj['options']
         else:

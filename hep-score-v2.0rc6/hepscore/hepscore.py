@@ -1107,6 +1107,7 @@ class HEPscore():
         with open("power.json", "w") as f:
             json.dump(power, f)
             json.dump(benchTime, f)
+        
         endtime= time.time()
         self.confobj['environment']['end_at'] = time.asctime(time.localtime(endtime))
         self.confobj['environment']['duration'] = math.floor(endtime) - math.floor(starttime)

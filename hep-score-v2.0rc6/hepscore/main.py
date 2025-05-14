@@ -5,8 +5,9 @@ Copyright 2019-2021 CERN. See the COPYRIGHT file at the top-level directory
 of this distribution. For licensing information, see the COPYING file at
 the top-level directory of this distribution.
 """
-
-
+import subprocess
+import base64
+import requests
 import argparse
 import logging
 import os
@@ -14,6 +15,7 @@ import sys
 import textwrap
 import time
 import yaml
+import json
 import hepscore.hepscore as hepscore
 from datetime import datetime
 
@@ -109,6 +111,7 @@ def parse_args(args):
                         help="enables verbose mode. Display debug messages.")
     parser.add_argument("-O", "--oid", action="append")
     parser.add_argument("-I", "--IPs", action="append")
+    parser.add_argument("-t", "--token", action="append")
     arg_dict = vars(parser.parse_args(args))
     return arg_dict
 
@@ -134,6 +137,20 @@ def check_args(args):
         sys.exit(exit_status_dict['Error 2 config passed'])
 
 def main():
+
+    def get_dell_serial_linux():
+        try:
+            result = subprocess.run(
+                ["sudo", "dmidecode", "-s", "system-serial-number"],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            serial_number = result.stdout.strip()
+            return serial_number
+        except subprocess.CalledProcessError as e:
+            return f"Error: {e.stderr.strip()}"
+
     """Command-line entry point. Parses arguments to construct configuration dict."""
     args = parse_args(sys.argv[1:])
 
@@ -238,6 +255,23 @@ def main():
     if hep_score.run(args['replay']) >= 0:
         hep_score.gen_score()
     hep_score.write_output(outtype, args['outfile'])
+
+    with open("power.json", "r") as f:
+        powerData = json.load(f)
+
+    fileName = get_dell_serial_linux()
+
+    url = f"https://api.github.com/repos/Codemeister14/HEPscoreData/contents/{fileName}.json"
+    headers = {"Authorization": f"token {args["token"]}"}
+    data = {
+        "message": "commited",
+        "content": base64.b64encode(powerData.encode()).decode(),
+        "branch": "main",
+    }
+    
+    res = requests.put(url, headers=headers, json=data)
+    res.raise_for_status()
+    print(" File committed")
 
 
 if __name__ == '__main__':

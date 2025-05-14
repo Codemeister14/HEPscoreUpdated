@@ -827,6 +827,11 @@ class HEPscore():
         else:
             self.confobj['score'] = float(fres)
             self.confobj['status'] = 'success'
+        with open("power.json", "r") as f:
+            powerData = json.load(f)
+        powerData["score"] = [float(fres)]
+        with open("power.json", "w") as f:
+            json.dump(powerData, f)
 
     def write_output(self, outtype, outfile=None):
         """Writes summary results in selected `outtype` to `outfile`
@@ -1105,8 +1110,7 @@ class HEPscore():
         stop.set()
         snmpThread.join()
         with open("power.json", "w") as f:
-            json.dump(power, f)
-            json.dump(benchTime, f)
+            json.dump({"power": power, "benchtime": benchTime}, f)
         
         endtime= time.time()
         self.confobj['environment']['end_at'] = time.asctime(time.localtime(endtime))

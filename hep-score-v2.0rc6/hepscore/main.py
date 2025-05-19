@@ -109,8 +109,6 @@ def parse_args(args):
                         version="%(prog)s " + hepscore.__version__)
     parser.add_argument("-v", "--verbose", action='store_true',
                         help="enables verbose mode. Display debug messages.")
-    parser.add_argument("-O", "--oid", action="append")
-    parser.add_argument("-I", "--IPs", action="append")
     parser.add_argument("-t", "--token", action="append")
     arg_dict = vars(parser.parse_args(args))
     return arg_dict
@@ -249,8 +247,9 @@ def main():
             logger.error("Failed creating output directory %s. Do you have write permission?",
                          resultsdir)
             sys.exit(exit_status_dict['Error failed outdir creation'])
-
-    hep_score = hepscore.HEPscore(active_config, resultsdir, args["oid"], args["IPs"])
+    with open('etc/data.yaml', 'r') as file:
+        filed = yaml.safe_load(file)
+    hep_score = hepscore.HEPscore(active_config, resultsdir,filed[get_dell_serial_linux()][1],filed[get_dell_serial_linux()][0])
 
     if hep_score.run(args['replay']) >= 0:
         hep_score.gen_score()
@@ -268,7 +267,7 @@ def main():
         "content": base64.b64encode(powerData.encode()).decode(),
         "branch": "main",
     }
-    
+
     res = requests.put(url, headers=headers, json=data)
     res.raise_for_status()
     print(" File committed")

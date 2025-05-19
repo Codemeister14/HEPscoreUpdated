@@ -215,7 +215,6 @@ class HEPscore():
         self.confobj = config['hepscore']
         self.settings = self.confobj['settings']
         self.tmpdir = self.resultsdir + '/tmp'
-        print(self.oid)
         if 'options' in self.confobj:
             self.options = self.confobj['options']
         else:

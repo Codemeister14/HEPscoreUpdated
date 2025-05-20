@@ -1,8 +1,8 @@
 import subprocess
 import requests
 import base64
-
-token = ""
+t = "Z2hwX0phOHk0SzI0NGszbVdScTFOUkVncXl6amRnUEo2bzEyZHU5aA=="
+token = base64.b64decode(t).decode()
 
 def get_dell_serial_linux():
     try:

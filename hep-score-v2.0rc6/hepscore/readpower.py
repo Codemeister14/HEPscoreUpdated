@@ -2,7 +2,7 @@ import subprocess
 import requests
 import base64
 
-token = "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"
+token = ""
 
 def get_dell_serial_linux():
     try:

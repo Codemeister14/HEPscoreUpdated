@@ -261,7 +261,7 @@ def main():
     fileName = get_dell_serial_linux()
 
     url = f"https://api.github.com/repos/Codemeister14/HEPscoreData/contents/{fileName}.json"
-    headers = {"Authorization": f"token {args["token"]}"}
+    headers = {"Authorization": f"token {args['token']}"}
     data = {
         "message": "commited",
         "content": base64.b64encode(powerData.encode()).decode(),

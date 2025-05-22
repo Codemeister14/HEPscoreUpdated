@@ -8,7 +8,6 @@ the top-level directory of this distribution.
 """
 
 import asyncio
-import time
 import threading
 import glob
 import hashlib

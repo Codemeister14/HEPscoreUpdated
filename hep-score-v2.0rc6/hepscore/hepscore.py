@@ -996,7 +996,7 @@ class HEPscore():
 
         return self.confobj
 
-    def run(self, mock=False):
+    def run(self, mock=True):
         """Run the benchmarks defined in the constructor config dict
 
         Args:

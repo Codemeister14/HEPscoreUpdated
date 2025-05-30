@@ -996,7 +996,7 @@ class HEPscore():
 
         return self.confobj
 
-    def run(self, mock=True):
+    def run(self, mock=False):
         """Run the benchmarks defined in the constructor config dict
 
         Args:
@@ -1026,14 +1026,14 @@ class HEPscore():
         power = []
         benchTime = {}
         stop = threading.Event()
-        '''def thread_target(delay, IPs, stop, power, oids):
+        def thread_target(delay, IPs, stop, power, oids):
             asyncio.run(getPowerReadings(delay, IPs, stop, power, oids))
 
         snmpThread = threading.Thread(
             target=thread_target,
             args=(5, self.IP, stop, power, self.oid)
         )
-        snmpThread.start()'''
+        snmpThread.start()
     
         impl,ver = self.get_version()
         exec_ver = impl + "_version"
@@ -1107,10 +1107,10 @@ class HEPscore():
                 self.weights.append(1.0)
                 bench_conf['weight'] = 1.0
         stop.set()
-        '''snmpThread.join()
+        snmpThread.join()
         with open("power.json", "w") as f:
             json.dump({"power": power, "benchtime": benchTime}, f)
-        '''
+        
         endtime= time.time()
         self.confobj['environment']['end_at'] = time.asctime(time.localtime(endtime))
         self.confobj['environment']['duration'] = math.floor(endtime) - math.floor(starttime)

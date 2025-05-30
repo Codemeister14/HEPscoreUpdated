@@ -249,8 +249,8 @@ def main():
             sys.exit(exit_status_dict['Error failed outdir creation'])
     with open('etc/data.yaml', 'r') as file:
         filed = yaml.safe_load(file)
-    #hep_score = hepscore.HEPscore(active_config, resultsdir,filed[get_dell_serial_linux()][1],filed[get_dell_serial_linux()][0])
-    hep_score = hepscore.HEPscore(active_config, resultsdir,[""],[""])
+    hep_score = hepscore.HEPscore(active_config, resultsdir,filed[get_dell_serial_linux()][1],filed[get_dell_serial_linux()][0])
+    
     if hep_score.run(args['replay']) >= 0:
         hep_score.gen_score()
     hep_score.write_output(outtype, args['outfile'])

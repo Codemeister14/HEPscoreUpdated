@@ -32,6 +32,8 @@ logger = logging.getLogger(__name__)
 config_path = '/'.join(os.path.split(__file__)[:-1]) + "/etc"
 
 async def getPowerReadings(interval,IPs,stop,power,oid):
+    if (len(IPs) == 0):
+        return
     engine = SnmpEngine()
     while not stop.is_set():
         for i in range(0,len(IPs)):

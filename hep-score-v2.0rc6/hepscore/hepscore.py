@@ -34,7 +34,7 @@ config_path = '/'.join(os.path.split(__file__)[:-1]) + "/etc"
 async def getPowerReadings(interval,IPs,stop,power,oid):
     engine = SnmpEngine()
     while not stop.is_set():
-        for i in range(0,2):
+        for i in range(0,len(IPs)):
             transport = await UdpTransportTarget.create((IPs[i], 161))
             errorIndication, errorStatus, errorIndex, varBinds = await get_cmd(engine,
                     CommunityData('LHCsnmpL88k', mpModel=1),

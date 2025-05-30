@@ -1027,7 +1027,7 @@ class HEPscore():
         curtime = time.asctime(time.localtime(starttime))
         power = []
         benchTime = {}
-        stop = threading.Event()
+        '''stop = threading.Event()
         def thread_target(delay, IPs, stop, power, oids):
             asyncio.run(getPowerReadings(delay, IPs, stop, power, oids))
 
@@ -1035,7 +1035,7 @@ class HEPscore():
             target=thread_target,
             args=(5, self.IP, stop, power, self.oid)
         )
-        snmpThread.start()
+        snmpThread.start()'''
     
         impl,ver = self.get_version()
         exec_ver = impl + "_version"
@@ -1108,8 +1108,8 @@ class HEPscore():
             else:
                 self.weights.append(1.0)
                 bench_conf['weight'] = 1.0
-        stop.set()
-        snmpThread.join()
+        '''stop.set()
+        snmpThread.join()'''
         with open("power.json", "w") as f:
             json.dump({"power": power, "benchtime": benchTime}, f)
         

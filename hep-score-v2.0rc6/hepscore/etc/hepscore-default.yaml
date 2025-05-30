@@ -72,7 +72,7 @@ hepscore:
       - dir:///cvmfs/unpacked.cern.ch/gitlab-registry.cern.ch/hep-benchmarks/hep-workloads
     addarch: true
     method: geometric_mean
-    repetitions: 3
+    repetitions: 1
     retries: 1
     scaling: 1018
     container_exec: singularity

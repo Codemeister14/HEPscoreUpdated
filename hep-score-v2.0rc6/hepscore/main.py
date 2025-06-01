@@ -226,7 +226,7 @@ def main():
                 print("NOTICE - overriding config registry with " + sval)
 
             active_config[usekey]['options'][arg] = sval
-
+    print(get_dell_serial_linux)
     # check replay outdir actually contains a run...
     if args['replay']:
         if not os.path.isdir(outdir):

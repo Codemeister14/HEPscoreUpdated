@@ -211,7 +211,7 @@ class HEPscore():
             logger.error("Required 'hepscore' key not in configuration!")
             sys.exit(1)
         for od in oids:
-            self.oid.append(".1.3.6.1.4.1.13742.6.5.4.3.1.4.1."+str(oids))
+            self.oid.append(".1.3.6.1.4.1.13742.6.5.4.3.1.4.1."+str(od))
         self.IP = IPs
         self.confobj = config['hepscore']
         self.settings = self.confobj['settings']

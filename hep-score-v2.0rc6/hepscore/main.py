@@ -264,7 +264,7 @@ def main():
     headers = {"Authorization": f"token {args['token']}"}
     data = {
         "message": "commited",
-        "content": base64.b64encode(powerData.encode()).decode(),
+        "content": base64.b64encode(json.dumps(powerData).encode()).decode(),
         "branch": "main",
     }
 

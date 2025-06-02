@@ -2,7 +2,7 @@ import subprocess
 import requests
 import base64
 import sys
-
+import datetime
 
 token = sys.argv[1]
 
@@ -21,7 +21,7 @@ def get_dell_serial_linux():
 
 with open("/tmp/perf_output.txt", "r") as f:
     powerData = f.read()
-fileName = get_dell_serial_linux()
+fileName = f"{get_dell_serial_linux()}+{datetime.date}"
 
 url = f"https://api.github.com/repos/Codemeister14/HEPscoreData/contents/{fileName}Power.txt"
 headers = {"Authorization": f"token {token}"}

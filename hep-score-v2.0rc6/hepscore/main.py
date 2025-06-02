@@ -258,7 +258,7 @@ def main():
     with open("power.json", "r") as f:
         powerData = json.load(f)
 
-    fileName = f"{get_dell_serial_linux()}+{datetime.date}"
+    fileName = f"{get_dell_serial_linux()}+{datetime.now()}"
 
     url = f"https://api.github.com/repos/Codemeister14/HEPscoreData/contents/{fileName}.json"
     headers = {"Authorization": f"token {args['token']}"}

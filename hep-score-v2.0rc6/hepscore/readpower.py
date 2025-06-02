@@ -21,7 +21,7 @@ def get_dell_serial_linux():
 
 with open("/tmp/perf_output.txt", "r") as f:
     powerData = f.read()
-fileName = f"{get_dell_serial_linux()}+{datetime.date}"
+fileName = f"{get_dell_serial_linux()}+{datetime.now()}"
 
 url = f"https://api.github.com/repos/Codemeister14/HEPscoreData/contents/{fileName}Power.txt"
 headers = {"Authorization": f"token {token}"}

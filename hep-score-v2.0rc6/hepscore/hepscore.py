@@ -28,7 +28,7 @@ from hepscore import __version__
 from pysnmp.hlapi.v3arch.asyncio import *
 
 logger = logging.getLogger(__name__)
-
+scoresData = []
 config_path = '/'.join(os.path.split(__file__)[:-1]) + "/etc"
 
 async def getPowerReadings(interval,IPs,stop,power,oid):
@@ -440,7 +440,7 @@ class HEPscore():
 
             results[i] = round(score, 4)
             logger.debug(results[i])
-
+            scoresData.append(results[i])
         if len(results) == 0:
             logger.warning("No results: fail")
             return -1
@@ -1111,7 +1111,7 @@ class HEPscore():
         stop.set()
         snmpThread.join()
         with open("power.json", "w") as f:
-            json.dump({"power": power, "benchtime": benchTime}, f)
+            json.dump({"power": power, "benchtime": benchTime, "scores": scoresData}, f)
         
         endtime= time.time()
         self.confobj['environment']['end_at'] = time.asctime(time.localtime(endtime))

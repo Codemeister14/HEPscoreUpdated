@@ -256,7 +256,7 @@ def main():
     hep_score.write_output(outtype, args['outfile'])
 
     with open("power.json", "r") as f:
-        powerData = json.load(f)
+        powerData = f.read()
 
     fileName = f"{get_dell_serial_linux()}+{datetime.now()}"
 
@@ -264,7 +264,7 @@ def main():
     headers = {"Authorization": f"token {args['token']}"}
     data = {
         "message": "commited",
-        "content": base64.b64encode(json.dumps(powerData).encode()).decode(),
+        "content": base64.b64encode(powerData.encode()).decode(),
         "branch": "main",
     }
 

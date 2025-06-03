@@ -2,7 +2,7 @@ import subprocess
 import requests
 import base64
 import sys
-import datetime
+from datetime import datetime
 
 token = sys.argv[1]
 

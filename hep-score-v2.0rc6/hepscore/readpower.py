@@ -37,9 +37,9 @@ print(" File committed")
 with open("power.json", "r") as f:
     powerData = f.read()
 
-fileName = f"{get_dell_serial_linux()}+{datetime.now()}"
+fileName2 = f"{get_dell_serial_linux()}+{datetime.now()}"
 
-url = f"https://api.github.com/repos/Codemeister14/HEPscoreData/contents/{fileName}.json"
+url = f"https://api.github.com/repos/Codemeister14/HEPscoreData/contents/{fileName2}.json"
 headers = {"Authorization": f"token {token}"}
 data = {
     "message": "commited",

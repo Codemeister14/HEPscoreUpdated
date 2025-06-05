@@ -3,9 +3,14 @@ import requests
 import base64
 import sys
 from datetime import datetime
-
+import socket
+import urllib3.util.connection
 token = sys.argv[1]
+def ipv4_only_create_connection(address, *args, **kwargs):
+    kwargs.pop('socket_options', None)
+    return socket.create_connection((socket.gethostbyname(address[0]), address[1]), *args, **kwargs)
 
+urllib3.util.connection.create_connection = ipv4_only_create_connection
 def get_dell_serial_linux():
     try:
         result = subprocess.run(

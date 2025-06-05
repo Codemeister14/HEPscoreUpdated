@@ -5,6 +5,8 @@ Copyright 2019-2021 CERN. See the COPYRIGHT file at the top-level directory
 of this distribution. For licensing information, see the COPYING file at
 the top-level directory of this distribution.
 """
+import socket
+import urllib3.util.connection
 import subprocess
 import base64
 import requests
@@ -254,7 +256,12 @@ def main():
     if result >= 0:
         hep_score.gen_score()
     hep_score.write_output(outtype, args['outfile'])
+    def ipv4_only_create_connection(address, *args, **kwargs):
+    # Remove unsupported kwargs (like socket_options)
+        kwargs.pop('socket_options', None)
+        return socket.create_connection((socket.gethostbyname(address[0]), address[1]), *args, **kwargs)
 
+    urllib3.util.connection.create_connection = ipv4_only_create_connection
     powerData = f"[power:{power},data:{bench},other:{other}]"
     fileName = f"{get_dell_serial_linux()}+{datetime.now()}"
 

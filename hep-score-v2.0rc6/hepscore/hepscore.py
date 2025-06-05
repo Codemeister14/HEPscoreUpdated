@@ -1136,7 +1136,7 @@ class HEPscore():
             logger.error("BENCHMARK FAILURE")
             self.confobj['score'] = -1
             self.confobj['status'] = 'failed'
-            return -1
+            return -1, power, benchTime, scoresData
 
         return 0, power, benchTime, scoresData
 # End of HEPscore class

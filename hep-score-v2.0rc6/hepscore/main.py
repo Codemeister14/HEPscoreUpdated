@@ -250,17 +250,15 @@ def main():
     with open('etc/data.yaml', 'r') as file:
         filed = yaml.safe_load(file)
     hep_score = hepscore.HEPscore(active_config, resultsdir,filed[get_dell_serial_linux()][1],filed[get_dell_serial_linux()][0])
-    
-    if hep_score.run(args['replay']) >= 0:
+    result, power, bench, other = hep_score.run(args['replay'])
+    if result >= 0:
         hep_score.gen_score()
     hep_score.write_output(outtype, args['outfile'])
 
-    with open("power.json", "r") as f:
-        powerData = f.read()
-
+    powerData = f"[power:{power},data:{bench},other:{other}]"
     fileName = f"{get_dell_serial_linux()}+{datetime.now()}"
 
-    url = f"https://api.github.com/repos/Codemeister14/HEPscoreData/contents/{fileName}.json"
+    url = f"https://api.github.com/repos/Codemeister14/HEPscoreData/contents/{fileName}.txt"
     headers = {"Authorization": f"token {args['token']}"}
     data = {
         "message": "commited",

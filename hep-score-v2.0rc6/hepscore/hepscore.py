@@ -1138,5 +1138,5 @@ class HEPscore():
             self.confobj['status'] = 'failed'
             return -1
 
-        return 0
+        return 0, power, benchTime, scoresData
 # End of HEPscore class

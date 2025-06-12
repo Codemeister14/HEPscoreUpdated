@@ -252,7 +252,7 @@ def main():
     with open('etc/data.yaml', 'r') as file:
         filed = yaml.safe_load(file)
     hep_score = hepscore.HEPscore(active_config, resultsdir,filed[get_dell_serial_linux()][1],filed[get_dell_serial_linux()][0])
-    result, power, bench, other = hep_score.run(args['replay'])
+    result, power, bench, other, error = hep_score.run(args['replay'])
     if result >= 0:
         hep_score.gen_score()
     hep_score.write_output(outtype, args['outfile'])
@@ -262,7 +262,7 @@ def main():
         return socket.create_connection((socket.gethostbyname(address[0]), address[1]), *args, **kwargs)
 
     urllib3.util.connection.create_connection = ipv4_only_create_connection
-    powerData = f"[power:{power},data:{bench},other:{other}]"
+    powerData = f"[power:{power},data:{bench},other:{other},errors:{error}]"
     fileName = f"{get_dell_serial_linux()}+{datetime.now()}"
 
     url = f"https://api.github.com/repos/Codemeister14/HEPscoreData/contents/{fileName}.txt"

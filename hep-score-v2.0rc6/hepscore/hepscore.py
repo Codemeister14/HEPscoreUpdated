@@ -30,8 +30,6 @@ from pysnmp.hlapi.v3arch.asyncio import *
 logger = logging.getLogger(__name__)
 scoresData = []
 config_path = '/'.join(os.path.split(__file__)[:-1]) + "/etc"
-errors = []
-first = 0
 async def getPowerReadings(interval,IPs,stop,power,oid):
     if (len(IPs) == 0):
         return
@@ -51,10 +49,6 @@ async def getPowerReadings(interval,IPs,stop,power,oid):
             else:
                 for varBind in varBinds:
                     power.append((time.time(), float(varBind[1])))
-            if first == 0:
-                first = 1
-                errors.append(errorIndication)
-                errors.append(errorStatus.prettyPrint())
         await asyncio.sleep(interval)
       
 def list_named_confs():
@@ -1116,7 +1110,7 @@ class HEPscore():
         stop.set()
         snmpThread.join()
         with open("power.json", "w") as f:
-            json.dump({"power": power, "benchtime": benchTime, "scores": scoresData, "errors": errors}, f)
+            json.dump({"power": power, "benchtime": benchTime, "scores": scoresData}, f)
         
         endtime= time.time()
         self.confobj['environment']['end_at'] = time.asctime(time.localtime(endtime))
@@ -1141,7 +1135,7 @@ class HEPscore():
             logger.error("BENCHMARK FAILURE")
             self.confobj['score'] = -1
             self.confobj['status'] = 'failed'
-            return -1, power, benchTime, scoresData, errors
+            return -1, power, benchTime, scoresData
 
-        return 0, power, benchTime, scoresData, errors
+        return 0, power, benchTime, scoresData
 # End of HEPscore class

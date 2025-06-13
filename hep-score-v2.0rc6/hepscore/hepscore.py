@@ -30,7 +30,7 @@ from pysnmp.hlapi.v3arch.asyncio import *
 logger = logging.getLogger(__name__)
 scoresData = []
 config_path = '/'.join(os.path.split(__file__)[:-1]) + "/etc"
-async def getPowerReadings(interval,IPs,stop,power,oid):
+async def getPowerReadings(interval,IPs,stop,power,oid,temp):
     if (len(IPs) == 0):
         return
     engine = SnmpEngine()
@@ -42,9 +42,21 @@ async def getPowerReadings(interval,IPs,stop,power,oid):
                     transport,
                     ContextData(),
                     ObjectType(ObjectIdentity(oid[i]+".5")))
+            errorIndication2, errorStatus2, errorIndex2, varBinds2 = await get_cmd(engine,
+                    CommunityData('LHCsnmpL88k', mpModel=1),
+                    transport,
+                    ContextData(),
+                    ObjectType(ObjectIdentity(oid[i]+".10")))
             if errorIndication:
                 print(f"SNMP error: {errorIndication}")
             elif errorStatus:
+                print(f"SNMP error: {errorStatus.prettyPrint()}")
+            else:
+                for varBind2 in varBinds2:
+                    temp.append((time.time(), float(varBind[1])))
+            if errorIndication2:
+                print(f"SNMP error: {errorIndication}")
+            elif errorStatus2:
                 print(f"SNMP error: {errorStatus.prettyPrint()}")
             else:
                 for varBind in varBinds:
@@ -1025,14 +1037,15 @@ class HEPscore():
         starttime = time.time()
         curtime = time.asctime(time.localtime(starttime))
         power = []
+        temp = []
         benchTime = {}
         stop = threading.Event()
-        def thread_target(delay, IPs, stop, power, oids):
-            asyncio.run(getPowerReadings(delay, IPs, stop, power, oids))
+        def thread_target(delay, IPs, stop, power, oids, temp):
+            asyncio.run(getPowerReadings(delay, IPs, stop, power, oids, temp))
 
         snmpThread = threading.Thread(
             target=thread_target,
-            args=(5, self.IP, stop, power, self.oid)
+            args=(5, self.IP, stop, power, self.oid, temp)
         )
         snmpThread.start()
     
@@ -1110,7 +1123,7 @@ class HEPscore():
         stop.set()
         snmpThread.join()
         with open("power.json", "w") as f:
-            json.dump({"power": power, "benchtime": benchTime, "scores": scoresData}, f)
+            json.dump({"power": power, "benchtime": benchTime, "scores": scoresData, "temp": temp}, f)
         
         endtime= time.time()
         self.confobj['environment']['end_at'] = time.asctime(time.localtime(endtime))
@@ -1135,7 +1148,7 @@ class HEPscore():
             logger.error("BENCHMARK FAILURE")
             self.confobj['score'] = -1
             self.confobj['status'] = 'failed'
-            return -1, power, benchTime, scoresData
+            return -1, power, benchTime, scoresData, temp
 
-        return 0, power, benchTime, scoresData
+        return 0, power, benchTime, scoresData, temp
 # End of HEPscore class

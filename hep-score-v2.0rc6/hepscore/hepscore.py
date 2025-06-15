@@ -42,21 +42,9 @@ async def getPowerReadings(interval,IPs,stop,power,oid,temp):
                     transport,
                     ContextData(),
                     ObjectType(ObjectIdentity(oid[i]+".5")))
-            errorIndication2, errorStatus2, errorIndex2, varBinds2 = await get_cmd(engine,
-                    CommunityData('LHCsnmpL88k', mpModel=1),
-                    transport,
-                    ContextData(),
-                    ObjectType(ObjectIdentity(oid[i]+".10")))
             if errorIndication:
                 print(f"SNMP error: {errorIndication}")
             elif errorStatus:
-                print(f"SNMP error: {errorStatus.prettyPrint()}")
-            else:
-                for varBind2 in varBinds2:
-                    temp.append((time.time(), float(varBind[1])))
-            if errorIndication2:
-                print(f"SNMP error: {errorIndication}")
-            elif errorStatus2:
                 print(f"SNMP error: {errorStatus.prettyPrint()}")
             else:
                 for varBind in varBinds:
@@ -1148,7 +1136,7 @@ class HEPscore():
             logger.error("BENCHMARK FAILURE")
             self.confobj['score'] = -1
             self.confobj['status'] = 'failed'
-            return -1, power, benchTime, scoresData, temp
+            return -1, power, benchTime, scoresData
 
-        return 0, power, benchTime, scoresData, temp
+        return 0, power, benchTime, scoresData
 # End of HEPscore class

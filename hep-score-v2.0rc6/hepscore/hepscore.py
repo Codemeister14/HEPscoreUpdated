@@ -50,7 +50,7 @@ async def getPowerReadings(interval,IPs,stop,power,oid,temp):
                 for varBind in varBinds:
                     power.append((time.time(), float(varBind[1])))
         try:
-            ipmi = command.Command(userid="blade", password="changeme1")
+            ipmi = command.Command(userid="", password="")
             for reading in ipmi.get_sensor_data():
                 if reading.get('name') == 'System Level':
                     temp.append((time.time(),reading))

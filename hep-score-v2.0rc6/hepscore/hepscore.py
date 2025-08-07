@@ -26,7 +26,6 @@ import time
 import yaml
 from hepscore import __version__
 from pysnmp.hlapi.v3arch.asyncio import *
-from pyghmi.ipmi import command
 logger = logging.getLogger(__name__)
 scoresData = []
 config_path = '/'.join(os.path.split(__file__)[:-1]) + "/etc"
@@ -49,13 +48,6 @@ async def getPowerReadings(interval,IPs,stop,power,oid,temp):
             else:
                 for varBind in varBinds:
                     power.append((time.time(), float(varBind[1])))
-        try:
-            ipmi = command.Command(userid="", password="")
-            for reading in ipmi.get_sensor_data():
-                if reading.get('name') == 'System Level':
-                    temp.append((time.time(),reading))
-        except Exception as e:
-            print("Error:", e)
         await asyncio.sleep(interval)
       
 def list_named_confs():
